@@ -142,8 +142,10 @@ public class MainActivity extends AppCompatActivity implements ListPresenter.Eng
             adapter.notifyDataSetChanged();
             adapter.notifyItemInserted(listResponse.size());
             adapter.setLoaded();
+            RealmController.with(this).clearAll();
             for (GetListResponse b : listResponse) {
                 // Persist your data easily
+
                 realm.beginTransaction();
                 realm.copyToRealm(b);
                 realm.commitTransaction();

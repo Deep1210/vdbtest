@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">vdb</string>
-    <string name="toolbar_text">Kotlin Test</string>
+    <string name="toolbar_text">VDB Test</string>
 </resources>
