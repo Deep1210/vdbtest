@@ -27,13 +27,14 @@ import io.realm.Realm;
 
 public class MainActivity extends AppCompatActivity implements ListPresenter.EngageFragmentCallbackInterface {
 
-    private int end = 15;
+    private int end = 1;
     private Handler handler;
     private Realm realm;
     private RecyclerView rvData;
     private ListAdapter adapter;
     private CustomProgressDialog progressDialog;
     private ArrayList<GetListResponse> listResponse = new ArrayList<>();
+    private int count;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,28 +72,27 @@ public class MainActivity extends AppCompatActivity implements ListPresenter.Eng
         adapter.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
             public void onLoadMore() {
-                if(listResponse.size()>=15) {
+                if(count==15) {
 
-                        listResponse.add(null);
-                        adapter.notifyItemInserted(listResponse.size() - 1);
-                        //   remove progress item
+                    listResponse.add(null);
+                    adapter.notifyItemInserted(listResponse.size() - 1);
+                    //   remove progress item
 
-                        handler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                //   remove progress item
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            //   remove progress item
 
-                                listResponse.remove(listResponse.size() - 1);
-                                adapter.notifyItemRemoved(listResponse.size());
-                                //add items one by one
-                                int start = listResponse.size();
-                                end = start + 15;
-                                getList(end,2);
-                                //or you can add all at once but do not forget to call mAdapter.notifyDataSetChanged();
-                            }
-                        }, 2000);//
-                    // or you can add all at once but do not forget to call mAdapter.notifyDataSetChanged();
+                            listResponse.remove(listResponse.size() - 1);
+                            //add items one by one
+                            end = end + 1;
+                            getList(end, 2);
+                            //or you can add all at once but do not forget to call mAdapter.notifyDataSetChanged();
+                        }
+                    }, 2000);//
                 }
+                    // or you can add all at once but do not forget to call mAdapter.notifyDataSetChanged();
+
             }
         });
     }
@@ -137,10 +137,10 @@ public class MainActivity extends AppCompatActivity implements ListPresenter.Eng
     public void onGetListSuccess(List<GetListResponse> getListResponse) {
         if(getListResponse!=null) {
             hideLoader();
-            listResponse.clear();
+            count = getListResponse.size();
+            Log.e("Count : ",count+"");
             listResponse.addAll(getListResponse);
             adapter.notifyDataSetChanged();
-            adapter.notifyItemInserted(listResponse.size());
             adapter.setLoaded();
             RealmController.with(this).clearAll();
             for (GetListResponse b : listResponse) {

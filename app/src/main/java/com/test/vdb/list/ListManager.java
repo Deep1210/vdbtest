@@ -29,7 +29,7 @@ public class ListManager {
 
     public void callGetListApi(final MainActivity context, int pageNo) {
         ListApiInterface listApiInterface= ServiceGenerator.getClient().create(ListApiInterface.class);
-        Call<List<GetListResponse>> call = listApiInterface.getList(1,pageNo);
+        Call<List<GetListResponse>> call = listApiInterface.getList(pageNo,15);
         call.enqueue(new Callback<List<GetListResponse>>() {
 
             @Override
